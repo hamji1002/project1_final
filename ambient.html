@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ambient</title>
+  
+  <style>
+    :root{
+      --paper: #f6f6f3;
+      --ink: #12110f;
+      --muted: #6f6c66;
+      --frame: rgba(18, 17, 15, 0.14);
+      --label: rgba(18, 17, 15, 0.6);
+      --nextpage_hover: #e24b2a;
+      --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    * { 
+    box-sizing: border-box; 
+    }
+    
+    body {
+      margin: 0; padding: 0;
+      height: 100vh;
+      width: 100vw;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.01em;  
+      display: grid;
+      grid-template-columns: 320px 1fr 320px;
+      grid-template-rows: 80px 1fr 90px;
+    }
+
+    a { 
+        text-decoration: none; 
+        color: inherit; 
+    }
+
+    /* =========================
+       Layout Frame
+       ========================= */
+    
+    .site-title {
+      grid-column: 1 / 2; grid-row: 1 / 2;
+      border-right: 1px solid var(--frame);
+      border-bottom: 1px solid var(--frame);
+      display: flex; align-items: center; justify-content: center;
+      
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .page-header {
+      grid-column: 2 / 3; grid-row: 1 / 2;
+      border-bottom: 1px solid var(--frame);
+      display: flex; align-items: center; padding: 0 24px;
+      justify-content: center;
+    }
+
+    .distance-info {
+      grid-column: 3 / 4; grid-row: 1 / 2;
+      border-left: 1px solid var(--frame);
+      border-bottom: 1px solid var(--frame);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .distance-description {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--label);
+    }
+    
+    .distance-description span {
+      color: var(--muted);
+      margin-right: 6px;
+    }
+
+    .center-dots {
+      font-family: var(--font-sans);
+      font-size: 18px;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+
+    .holding-key {
+      grid-column: auto; grid-row: auto;
+      border-left: none;
+      padding: 20px 0 0;
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 12px;
+      color: var(--label);
+    }
+
+    .holding-description {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--label);
+      margin: 8px 0 20px;
+      letter-spacing: 0.01em;
+      text-transform: none;
+      line-height: 1.7;
+    }
+
+    .holding-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .holding-word { 
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      column-gap: 8px;
+      align-items: baseline;
+      font-size: 11px;
+    }
+
+    .holding-title {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--frame);
+      padding-bottom: 8px;
+      grid-template-columns: 1fr;
+    }
+
+    .holding-word div {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+    }
+
+    .holding-word span {
+      font-family: var(--font-sans);
+      color: var(--label);
+      font-style: italic;
+      font-size: 11px;
+    }
+
+    .proximity-notes {
+      border-left: 1px solid var(--frame);
+      padding: 36px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--label);
+      line-height: 1.7;
+      font-size: 12px;
+    }
+    
+    /*Gallery */
+    .gallery {
+      overflow: auto;
+      position: relative;
+    }
+
+
+    .about-project {
+      grid-column: 1 / 2; grid-row: 2 / 3;
+      border-right: 1px solid var(--frame);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+      opacity: 0.9;
+    }
+
+
+    .explanation {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      line-height: 1.8;
+      text-align: left;
+      max-width: 260px;
+      color: var(--label);
+      margin: 0 0 18px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .explanation p { margin: 0; }
+
+    
+    /* BOTTOM BAR */
+    .footer-row {
+      grid-column: 1 / 4; grid-row: 3 / 4;
+      display: grid;
+      grid-template-columns: 320px 1fr 320px;
+      height: 100%;
+    }
+
+    .footer-box {
+      border-top: 1px solid var(--frame);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--label);
+      text-align: center;
+    }
+
+    .footer-box--left { border-right: 1px solid var(--frame); }
+    .footer-box--right { border-left: 1px solid var(--frame); }
+
+    .image-grid {
+      width: 140%;
+      height: 110%;
+      padding: 60px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      grid-auto-rows: 130px;
+      gap: 8px;
+      grid-auto-flow: dense;
+    }
+
+
+    a.image-card {
+      display: block; position: relative;
+      background: #e5e5e5; overflow: hidden; cursor: crosshair;
+    }
+
+    a.image-card img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+        filter: grayscale(100%) invert(0%) contrast(1);
+        transform: scale(1);
+        transition: filter 0.4s ease, opacity 0.4s ease, transform 0.5s ease;
+    }
+
+    .image-card--wide { grid-column: span 2; }
+    .image-card--tall { grid-row: span 2; }
+    .image-card--big  { grid-column: span 2; grid-row: span 2; }
+
+
+    /* =========================
+       hover
+       ========================= */
+
+    a.image-card[data-hold="glance"]:hover img {
+        opacity: 0;
+        transition: opacity 0.3s ease 0.1s; 
+    }
+
+    a.image-card[data-hold="held"]:hover img {
+        filter: grayscale(100%) contrast(1.3);
+        transform: scale(1.03);
+    }
+
+    a.image-card[data-hold="kept"]:hover img {
+        filter: grayscale(0%);
+    }
+
+    a.image-card[data-hold="revisited"] img {
+        filter: grayscale(35%) contrast(1.02) saturate(0.96);
+        transition: filter 0.5s ease; 
+    }
+    a.image-card[data-hold="revisited"]:hover img {
+        filter: grayscale(0%) contrast(1.04) saturate(1.04);
+    }
+
+    /* =========================
+       poppopups~
+       ========================= */
+    .image-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(246, 246, 243, 0.96); 
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .image-overlay:target { opacity: 1; pointer-events: auto; }
+
+    .note-card {
+      width: 900px; max-width: 90vw; height: 600px; max-height: 80vh;
+      border: 1px solid var(--frame); background: rgba(246, 246, 243, 0.96);
+      display: grid; grid-template-columns: 1.2fr 0.8fr;
+    }
+    
+    .note-image {
+      border-right: 1px solid var(--frame); padding: 40px;
+      display: flex; align-items: center; justify-content: center; background: rgba(246, 246, 243, 0.96);
+    }
+    .note-image img { width: 100%; height: 100%; object-fit: contain; }
+    
+    .note-body { padding: 40px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+    
+    .note-close {
+      position: absolute; top: 24px; right: 24px;
+      font-family: var(--font-sans);
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+      border: 1px solid var(--frame); padding: 6px 10px;
+      transition: all 0.2s ease;
+    }
+    .note-close:hover { background: var(--ink); color: var(--paper); }
+
+    .note-label { 
+      font-family: var(--font-sans);
+      font-size: 10px; 
+      font-weight: 600;
+      text-transform: uppercase; 
+      color: var(--label); 
+      margin-bottom: 16px; 
+      letter-spacing: 0.08em; 
+    }
+    
+    .note-data { 
+      font-family: var(--font-sans);
+      font-size: 11px; 
+      font-weight: 500;
+      line-height: 2; 
+      list-style: none; 
+      padding: 0; margin: 0 0 32px 0; 
+      color: var(--ink);
+    }
+
+    .note-text { 
+      font-family: var(--font-sans);
+      font-size: 13px; 
+      line-height: 1.6; 
+      margin-bottom: 24px; 
+      max-width: 320px; 
+      color: var(--ink);
+    }
+    
+    .note-tag { 
+        font-weight: 600; font-family: var(--font-sans); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; 
+    }
+
+    a.next-page {
+      border: 1px dashed var(--frame); background: transparent !important;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      color: var(--label);
+      transition: all 0.2s ease;
+    }
+
+    a.next-page:hover { 
+        border-color: var(--nextpage_hover); color: var(--nextpage_hover); 
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="site-title">Layer 01: Ambient</div>
+  
+  <header class="page-header">
+    <div class="center-dots">
+  </header>
+  
+  <div class="distance-info">
+    <div class="distance-description">
+      <span>Last Update</span> 15th, Jan
+    </div>
+  </div> 
+
+  <main class="gallery">
+    <div class="image-grid">
+
+        <a href="#image-a1" class="image-card" data-hold="held"><img src="images/a01.jpg"></a>
+        <a href="#image-a2" class="image-card image-card--wide" data-hold="revisited"><img src="images/a02.jpg"></a>
+        <a href="#image-a3" class="image-card image-card--tall" data-hold="kept"><img src="images/a03.jpg"></a>
+        <a href="#image-a4" class="image-card" data-hold="glance"><img src="images/a04.jpg"></a>
+        <a href="#image-a5" class="image-card" data-hold="revisited"><img src="images/a05.jpg"></a>
+        <a href="#image-a6" class="image-card image-card--big" data-hold="kept"><img src="images/a06.jpg"></a>
+        <a href="#image-a7" class="image-card" data-hold="held"><img src="images/a07.jpg"></a>
+        <a href="#image-a8" class="image-card image-card--wide" data-hold="glance"><img src="images/a08.jpg"></a>
+        <a href="#image-a9" class="image-card" data-hold="revisited"><img src="images/a09.jpg"></a>
+        
+        <a href="threshold.html" class="image-card next-page">
+            <span style="font-size:24px; margin-bottom:5px; font-weight:300;">→</span>
+            <span style="font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">zoom in</span>
+        </a>
+        
+        <a href="#image-a10" class="image-card" data-hold="glance"><img src="images/a10.jpg"></a>
+        <a href="#image-a11" class="image-card" data-hold="glance"><img src="images/a11.jpg"></a>
+        <a href="#image-a12" class="image-card" data-hold="held"><img src="images/a12.jpg"></a>
+        <a href="#image-a13" class="image-card image-card--tall" data-hold="revisited"><img src="images/a13.jpg"></a>
+        <a href="#image-a14" class="image-card" data-hold="held"><img src="images/a14.jpg"></a>
+        <a href="#image-a15" class="image-card" data-hold="kept"><img src="images/a15.jpg"></a>
+        <a href="#image-a16" class="image-card image-card--big" data-hold="glance"><img src="images/a16.jpg"></a>
+        <a href="#image-a17" class="image-card image-card--tall" data-hold="glance"><img src="images/a17.jpg"></a>
+        <a href="#image-a18" class="image-card" data-hold="revisited"><img src="images/a18.jpg"></a>
+        <a href="#image-a19" class="image-card" data-hold="kept"><img src="images/a19.jpg"></a>
+        <a href="#image-a20" class="image-card" data-hold="held"><img src="images/a20.jpg"></a>
+        <a href="#image-a21" class="image-card" data-hold="held"><img src="images/a21.jpg"></a>
+        <a href="#image-a22" class="image-card" data-hold="glance"><img src="images/a22.jpg"></a>
+        <a href="#image-a23" class="image-card" data-hold="glance"><img src="images/a23.jpg"></a>
+        <a href="#image-a24" class="image-card" data-hold="revisited"><img src="images/a24.jpg" alt=""></a>        
+        <a href="#image-a25" class="image-card" data-hold="kept"><img src="images/a25.jpg"></a>
+        <a href="#image-a26" class="image-card" data-hold="revisited"><img src="images/a26.jpg"></a>
+        <a href="#image-a27" class="image-card image-card--big" data-hold="glance"><img src="images/a27.jpg"></a>
+        <a href="#image-a28" class="image-card image-card--wide" data-hold="held"><img src="images/a28.jpg"></a> 
+        <a href="#image-a29" class="image-card" data-hold="held"><img src="images/a29.jpg"></a>
+        <a href="#image-a30" class="image-card" data-hold="glance"><img src="images/a30.jpg"></a>
+
+        <a href="ambient.html" class="image-card next-page">
+            <span style="font-size:24px; margin-bottom:5px; font-weight:300;">←</span>
+            <span style="font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">zoom out</span>
+        </a>
+        
+        <a href="#image-a31" class="image-card image-card--tall" data-hold="revisited"><img src="images/a31.jpg"></a>
+        <a href="#image-a32" class="image-card image-card--big" data-hold="held"><img src="images/a32.jpg"></a>
+        <a href="#image-a33" class="image-card" data-hold="kept"><img src="images/a33.jpg"></a>
+        <a href="#image-a34" class="image-card" data-hold="glance"><img src="images/a34.jpg"></a>
+        <a href="#image-a35" class="image-card image-card--big" data-hold="held"><img src="images/a35.jpg"></a>
+        <a href="#image-a36" class="image-card" data-hold="revisited"><img src="images/a36.jpg"></a>
+        <a href="#image-a37" class="image-card image-card--wide" data-hold="glance"><img src="images/a37.jpg"></a>
+        <a href="#image-a38" class="image-card" data-hold="kept"><img src="images/a38.jpg"></a>
+        <a href="#image-a39" class="image-card image-card--wide" data-hold="glance"><img src="images/a39.jpg"></a>
+    </div>
+  </main>
+
+  <aside class="about-project">
+    <div class="explanation">
+        <p>From far away, I notice arrangement before detail.</p>
+        <p>Edges read louder than surfaces.</p>
+        <p>Light becomes a flat measurement across everything.</p>
+        <p>I can look without needing to enter.</p>
+    </div>
+
+    <div class="holding-key">
+      <div class="holding-list">
+        <div class="holding-word holding-title"><strong>Holding Patterns</strong></div>
+        <div class="holding-word"><div>Glance</div> <span> briefly seen</span></div>
+        <div class="holding-word"><div>Held</div> <span> felt before naming</span></div>
+        <div class="holding-word"><div>Kept</div> <span> returned to</span></div>
+        <div class="holding-word"><div>Revisited</div> <span> seen again, differently</span></div>
+      </div>
+
+      <div class="holding-description">
+        These describe how attention stayed, not what was photographed.
+      </div>
+    </div>
+  </aside>
+
+  <aside class="proximity-notes">
+    <p>Distance holds.</p>
+  </aside>
+
+  <footer class="footer-row">
+    <div class="footer-box footer-box--left">This layer holds things at a distance..</div>
+    <div class="footer-box"><div class="center-dots">...</div></div>
+    <div class="footer-box footer-box--right">The next layer narrows attention.</div>
+  </footer>
+
+    <div id="image-a1" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a01.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: cool, even air</li>
+                    <li>Sound: wind moving through grass at one height</li>
+                    <li>Contact: wind brushing</li>
+                    <li>Light: flat daylight, no strong directions</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a2" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a02.jpg" alt=""></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span> motion without urgency, landscape sliding past without asking for attention<br><br>
+                    <span class="note-tag">Now:</span> a reminder that distance can be gentle, not empty
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="image-a3" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a03.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: cold air near water</li>
+                    <li>Sound: small ripples against stone</li>
+                    <li>Contact: soft but uneven ground underfoot</li>
+                    <li>Light: pale, low-contrast light diffused by mist</li>
+                </ul>
+                <div class="note-text">"the shoreline feels like a pause rather than a destination"</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a4" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a04_note.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a5" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a05.jpg" alt=""></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span> sky felt dominant, buildings secondary<br><br>
+                    <span class="note-tag">Now:</span> the crossing lines read as interruption rather than order
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a6" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a06.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: cool, steady air above water</li>
+                    <li>Sound: repetitive waves breaking and pulling back</li>
+                    <li>Contact:water surface in constant low movement</li>
+                    <li>Light:even daylight, sky fading from pale blue to white</li>
+                </ul>
+                <div class="note-text">"a balanced frame where nothing interrupts the line between sea and sky"</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a7" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a07.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: mild air warmed by sun</li>
+                    <li>Sound: distant traffic, open space behind the trees</li>
+                    <li>Contact: fine gravel underfoot</li>
+                    <li>Light: low-angle sunlight casting long and sharp shadows</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a8" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a08.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a9" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a09.jpg" alt=""></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span> the plants felt dominant, filling the frame with growth<br><br>
+                    <span class="note-tag">Now:</span> the stone line asserts itself as the quiet structure holding everything back
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a10" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a10.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a11" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a11.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a12" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a12.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: cool air near water </li>
+                    <li>Sound: waves folding onto wet sandy</li>
+                    <li>Contact: damp sand compressing under shoes</li>
+                    <li>Light: clear daylight, sky open and evenly lit</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a13" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a13.jpg" alt=""></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span>the space felt decorative, arranged for gathering<br><br>
+                    <span class="note-tag">Now:</span> the emptiness between people becomes the subject
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a14" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a14.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: mild air held under canopy</li>
+                    <li>Sound: distant birds, soft movement of leaves</li>
+                    <li>Contact: shaded ground, firm and undisturbed</li>
+                    <li>Light: filtered daylight broken by foliage</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a15" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a15.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature:cool air hovering above slow water</li>
+                    <li>Sound: wave impact followed by retreat</li>
+                    <li>Contact: water striking shore, then pulling back</li>
+                    <li>Light: pale sky fading evenly toward the horizon</li>
+                </ul>
+                <div class="note-text">the foreground wave gives weight to an otherwise balanced horizon</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a16" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a16_note.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a17" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a17.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a18" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a18.jpg" alt=""></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span>the scene felt continuous, passing without resistance<br><br>
+                    <span class="note-tag">Now:</span> the shadow in the foreground marks presence and speed
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a19" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a19.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature:air pressing downward, warmth held close to the ground</li>
+                    <li>Sound: grass colliding with itself, water barely audible behind</li>
+                    <li>Contact: stems resisting wind before giving way</li>
+                    <li>Light:cloud-filtered light suppressing contrast despite using flash light </li>
+                </ul>
+                <div class="note-text">the foreground absorbs attention before the distance can</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a20" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a20.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: air displaced by speed</li>
+                    <li>Sound: continuous low-frequency movement</li>
+                    <li>Contact: vibration</li>
+                    <li>Light: uniform exposure stretched by motion</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a21" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a21.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: warmth absorbed unevenly by rock and moss</li>
+                    <li>Sound: wind breaking across ridgelines, no echo</li>
+                    <li>Contact: ground sloping away, footing demanding attention</li>
+                    <li>Light: high-angle light flattening distance</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="image-a22" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a22_notes.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+  
+    <div id="image-a23" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a23.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>  
+
+    <div id="image-a24" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a24.jpg" alt=""></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span>it felt relaxed. People were sitting or standing without urgency, like they had time to stay.<br><br>
+                    <span class="note-tag">Now:</span> it feels light and social. People move easily through the garden, comfortable being around each other
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a25" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a25.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature:sunlight pooling on asphalt, shadow cooling the curb edges</li>
+                    <li>Sound: bus moving, brief engine acceleration</li>
+                    <li>Contact: painted crosswalk lines slightly raised underfoot</li>
+                    <li>Light: hard midday light flattening color, shadows cut cleanly by vehicles</li>
+                </ul>
+                <div class="note-text">a moment held between stops—nothing rushed, everything waiting its turn</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="image-a26" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a26.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span> the horizon appeared as a promise, an open invitation to endless distance<br><br>
+                    <span class="note-tag">Now:</span> the layers of violet feel like a heavy lid, closing the day into a single, unreachable memory
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="image-a27" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a27.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>  
+
+    <div id="image-a28" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a28.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: mild, carried by the light rather than the air</li>
+                    <li>Sound: a bicycle bell once, vocies passing without stopping</li>
+                    <li>Contact: shoes meeting slightly slick pavement</li>
+                    <li>Light: low sun stretching down the street</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a29" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a29.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature:  gentle warmth settling on skin, sand holding heat</li>
+                    <li>Sound: waves folding in and pulling back, steady and unforced</li>
+                    <li>Contact: feet sinking slightly into wet sand, water brushing the ankles</li>
+                    <li>Light: open daylight, even and calm, nothing sharp</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a30" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a30_notes.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a31" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a31_notes.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span> the light felt purely functional<br><br>
+                    <span class="note-tag">Now:</span> the light feels sculptural, carving a volume of silence out of the dark
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a32" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a32_notes.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: heavy summer air, humidity rising from the road</li>
+                    <li>Sound: electric hum of wires, footsteps on concrete</li>
+                    <li>Contact: hard pavement, unyielding and hot</li>
+                    <li>Light: vertical noon light, shadows short and sharp</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="image-a33" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a33.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: the bite of freezing air against exposed skin</li>
+                    <li>Sound: a profound hush, muffled by the heavy snowfall</li>
+                    <li>Contact: sharp prickle of ice crystals melting on the face</li>
+                    <li>Light: diffused and flat, a monochrome gray erasing all shadow</li>
+                </ul>
+                <div class="note-text">some moments are preserved not for an event, but for the total stillness that surrounded them</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a34" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a34.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="image-a35" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a35.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: cold night air stopping at the glass</li>
+                    <li>Sound: silence magnified by the artificial light</li>
+                    <li>Contact: standing motionless on the dark pavement</li>
+                    <li>Light: a warm, framed incandescence cutting the street</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a36" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a36.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span> the space felt monumental, a grand stage for public life<br><br>
+                    <span class="note-tag">Now:</span> the private conversation in the foreground reduces the architecture to scenery
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a37" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a37.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a38" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a38.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: dry wind carrying grit</li>
+                    <li>Sound: tires retreating over loose stone, then fading</li>
+                    <li>Contact: the ground vibrating slightly after passing</li>
+                    <li>Light: vast, shadowless daylight</li>
+                </ul>
+                <div class="note-text">the vehicle disappears, but the dust holds its shape for a moment longer</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-a39" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/a39.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>

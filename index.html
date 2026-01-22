@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Holding Patterns</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <style> 
+  :root{
+  --paper: #f2f2f0;
+  --ink: #1a1a1a;
+  --muted: #787878;
+  --accent: #ff3300;
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+*{ 
+  box-sizing: border-box; 
+}
+
+html, body{ height: 100%; }
+
+body{
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+
+.page{
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  padding: 60px 72px;
+
+  background-image:
+    radial-gradient(rgba(0,0,0,0.1) 0.7px, transparent 0.7px),
+    radial-gradient(rgba(0,0,0,0.02) 0.9px, transparent 0.9px);
+  background-size: 3px 3px, 5px 5px;
+  background-position: 0 0, 1px 2px;
+}
+
+.site-title{
+  position: absolute;
+  top: 28px;
+  left: 36px;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.about-project{
+  position: absolute;
+  left: 18vw;
+  top: 22vh;
+  width: min(760px, 64vw);
+}
+
+.description{
+  margin: 0 0 18px 0;
+  line-height: 1.9;
+  letter-spacing: 0.01em;
+  max-width: 64ch;
+}
+
+.far{
+  font-size: 12px;
+  color: rgba(26,26,26,0.28);
+  filter: blur(1.2px);
+}
+
+.mid{
+  font-size: 13px;
+  color: rgba(26,26,26,0.55);
+  filter: blur(0.5px);
+}
+
+.near{
+  font-size: 14px;
+  color: rgba(26,26,26,0.88);
+  filter: blur(0px);
+}
+
+
+.enter{
+  display: inline-block;
+  margin-top: 22px;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1px solid rgba(26,26,26,0.25);
+  padding-bottom: 6px;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.enter:hover{
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  transform: translateX(2px);
+}
+
+</style> 
+
+</head>
+<body>
+
+  <main class="page">
+    <div class="site-title">HOLDING PATTERNS</div>
+
+    <section class="about-project">
+      <p class="layer far">
+        distance is not space. it is a way of reading.
+      </p>
+
+      <p class="description mid">
+        i collect fragments because they don’t ask to be important.
+      </p>
+
+      <p class="description layer--near">
+        some stay without explanation. others return later.
+      </p>
+
+      <p class="description layer--near">
+        This archive organizes photographs by distance and by how attention is held.
+      </p>
+
+      <a class="enter" href="ambient.html">
+        enter
+      </a>
+    </section>
+  </main>
+
+</body>
+</html>

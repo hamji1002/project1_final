@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Threshold</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <style>
+    :root{
+    --paper: #f0f1f3;
+    --ink: #151515;
+    --muted: #6f7680;
+    --nextpage_hover: #3a6cff;
+    --frame: rgba(21, 21, 21, 0.14);
+    --label: rgba(21, 21, 21, 0.6);
+    --side-column: 360px;
+      --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0; padding: 0;
+      height: 100vh;
+      width: 100vw;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+      display: grid;
+      grid-template-columns: var(--side-column) 1fr var(--side-column);
+      grid-template-rows: 100px 1fr 110px;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* =========================
+       Layout Frame
+       ========================= */
+    
+    .site-title {
+      grid-column: 1 / 2; grid-row: 1 / 2;
+      border-right: 1px solid var(--frame);
+      border-bottom: 1px solid var(--frame);
+      display: flex; align-items: center; justify-content: center;
+      
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .page-header {
+      grid-column: 2 / 3; grid-row: 1 / 2;
+      border-bottom: 1px solid var(--frame);
+      display: flex; align-items: center; padding: 0 24px;
+      justify-content: center;
+    }
+
+    .distance-info {
+      grid-column: 3 / 4; grid-row: 1 / 2;
+      border-left: 1px solid var(--frame);
+      border-bottom: 1px solid var(--frame);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .distance-description {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--label);
+    }
+    
+    .distance-description span {
+      color: var(--muted);
+      margin-right: 6px;
+    }
+
+    .center-dots {
+      font-family: var(--font-sans);
+      font-size: 18px;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+
+    .holding-key {
+      grid-column: auto; grid-row: auto;
+      border-left: none;
+      padding: 20px 0 0;
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 12px;
+      color: var(--label);
+    }
+
+    .holding-description {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--label);
+      margin: 8px 0 20px;
+      letter-spacing: 0.01em;
+      text-transform: none;
+      line-height: 1.7;
+    }
+
+    .holding-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .holding-word { 
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      column-gap: 8px;
+      align-items: baseline;
+      font-size: 11px;
+    }
+
+    .holding-title {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--label);
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--frame);
+      padding-bottom: 8px;
+      grid-template-columns: 1fr;
+    }
+
+    .holding-word div {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+    }
+
+    .holding-word span {
+      font-family: var(--font-sans);
+      color: var(--label);
+      font-style: italic;
+      font-size: 11px;
+    }
+    
+    .proximity-notes {
+      border-left: 1px solid var(--frame);
+      padding: 44px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--label);
+      line-height: 1.7;
+      font-size: 12px;
+      gap: 8px;
+      flex-direction: column;
+    }
+    
+
+    /*Gallery */
+    .gallery {
+      overflow: auto;
+      position: relative;
+      background-image:
+      linear-gradient(to right, rgba(0,0,0,0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,0,0,0.035) 1px, transparent 1px);
+      background-size: 52px 52px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .gallery::-webkit-scrollbar { display: none; }
+    
+
+    .about-project {
+      grid-column: 1 / 2; grid-row: 2 / 3;
+      border-right: 1px solid var(--frame);
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+      opacity: 0.9;
+    }
+
+    /* BOTTOM BAR */
+    .footer-row {
+      grid-column: 1 / 4; grid-row: 3 / 4;
+      display: grid;
+      grid-template-columns: var(--side-column) 1fr var(--side-column);
+      height: 100%;
+    }
+
+    .footer-box {
+      border-top: 1px solid var(--frame);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--label);
+      text-align: center;
+    }
+
+    .footer-box--left { border-right: 1px solid var(--frame); }
+    .footer-box--right { border-left: 1px solid var(--frame); }
+
+    .explanation {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--label);
+      text-align: left;
+      margin: 0 0 18px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .explanation p { margin: 0; }
+    
+
+    /* =========================
+       Gallery
+       ========================= */
+    .image-grid {
+      width: 160%;
+      height: 100%;
+      padding: 60px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      grid-auto-rows: 130px;
+      gap: 8px;
+      grid-auto-flow: dense;
+    }
+
+
+    a.image-card {
+      display: block; position: relative;
+      background: #e5e5e5; overflow: hidden; cursor: crosshair;
+    }
+
+    a.image-card img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+        filter: grayscale(100%) invert(0%) contrast(1);
+        transform: scale(1);
+        transition: filter 0.4s ease, opacity 0.4s ease, transform 0.5s ease;
+    }
+
+    .image-card--wide { grid-column: span 2; }
+    .image-card--tall { grid-row: span 2; }
+    .image-card--big  { grid-column: span 2; grid-row: span 2; }
+
+
+    /* =========================
+       hover
+       ========================= */
+
+    a.image-card[data-hold="glance"]:hover img {
+        opacity: 0;
+        transition: opacity 0.3s ease 0.1s; 
+    }
+
+    a.image-card[data-hold="held"]:hover img {
+        filter: grayscale(100%) contrast(1.3);
+        transform: scale(1.03);
+    }
+
+    a.image-card[data-hold="kept"]:hover img {
+        filter: grayscale(0%);
+    }
+
+    a.image-card[data-hold="revisited"] img {
+        filter: grayscale(35%) contrast(1.02) saturate(0.96);
+        transition: filter 0.5s ease; 
+    }
+    a.image-card[data-hold="revisited"]:hover img {
+        filter: grayscale(0%) contrast(1.04) saturate(1.04);    
+    }
+
+
+    /* =========================
+       poppopups~
+       ========================= */
+    .image-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(240, 241, 243, 0.96);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .image-overlay:target { opacity: 1; pointer-events: auto; }
+
+    .note-card {
+      width: 900px; max-width: 90vw; height: 600px; max-height: 80vh;
+      border: 1px solid var(--frame); background: rgba(240, 241, 243, 0.96);
+      display: grid; grid-template-columns: 1.2fr 0.8fr;
+    }
+    
+    .note-image {
+      border-right: 1px solid var(--frame); padding: 40px;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      background: rgba(240, 241, 243, 0.96);
+    }
+    .note-image img { width: 100%; height: 100%; object-fit: contain; }
+    
+    .note-body { padding: 40px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+    
+    .note-close {
+      position: absolute; top: 24px; right: 24px;
+      font-family: var(--font-sans);
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+      border: 1px solid var(--frame); padding: 6px 10px;
+      transition: all 0.2s ease;
+    }
+    .note-close:hover { background: var(--ink); color: var(--paper); }
+
+    .note-label { 
+      font-family: var(--font-sans);
+      font-size: 10px; 
+      font-weight: 600;
+      text-transform: uppercase; 
+      color: var(--label); 
+      margin-bottom: 16px; 
+      letter-spacing: 0.08em; 
+    }
+    
+    .note-data { 
+      font-family: var(--font-sans);
+      font-size: 11px; 
+      font-weight: 500;
+      line-height: 2; 
+      list-style: none; 
+      padding: 0; margin: 0 0 32px 0; 
+      color: var(--ink);
+    }
+    
+    .note-text { 
+      font-family: var(--font-sans);
+      font-size: 13px; 
+      line-height: 1.6; 
+      margin-bottom: 24px; 
+      max-width: 320px; 
+      color: var(--ink);
+    }
+
+    .note-tag { 
+        font-weight: 600; font-family: var(--font-sans); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; 
+    }
+
+    a.next-page {
+      border: 1px dashed var(--frame); background: transparent !important;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      color: var(--label);
+      transition: all 0.2s ease;
+    }
+
+    a.next-page:hover { 
+        border-color: var(--nextpage_hover); color: var(--nextpage_hover); 
+    }
+  </style>
+</head>
+<body>
+
+  <div class="site-title">Layer02: Threshold</div>
+  
+  <header class="page-header">
+    <div class="center-dots">...</div>
+  </header>
+  
+  <div class="distance-info">
+    <div class="distance-description">
+      <span>Last Update</span> 15th, Jan
+    </div>
+  </div> 
+  
+  <main class="gallery">
+    <div class="image-grid">
+
+        <a href="#image-t1" class="image-card image-card--wide" data-hold="held"><img src="images/t01.jpg"></a>
+        <a href="#image-t2" class="image-card image-card--wide" data-hold="glance"><img src="images/t02.jpg"></a>
+        <a href="#image-t3" class="image-card image-card--tall" data-hold="kept"><img src="images/t03.jpg"></a>
+        <a href="#image-t4" class="image-card" data-hold="glance"><img src="images/t04.jpg"></a>
+        <a href="#image-t5" class="image-card" data-hold="kept"><img src="images/t05.jpg"></a>
+        <a href="#image-t6" class="image-card image-card--big" data-hold="revisited"><img src="images/t06.jpg"></a>
+        <a href="#image-t7" class="image-card" data-hold="held"><img src="images/t07.jpg"></a>
+        <a href="#image-t8" class="image-card image-card--wide" data-hold="kept"><img src="images/t08.jpg"></a>
+        <a href="#image-t9" class="image-card" data-hold="glance"><img src="images/t09.jpg"></a>
+        
+        <a href="interior.html" class="image-card next-page">
+            <span style="font-size:24px; margin-bottom:5px; font-weight:300;">→</span>
+            <span style="font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">zoom in</span>
+        </a>
+        
+        <a href="#image-t10" class="image-card" data-hold="glance"><img src="images/t10.jpg"></a>
+        <a href="#image-t11" class="image-card" data-hold="kept"><img src="images/t11.jpg"></a>
+        <a href="#image-t12" class="image-card" data-hold="glance"><img src="images/t12.jpg"></a>
+        <a href="#image-t13" class="image-card image-card--tall" data-hold="revisited"><img src="images/t13.jpg"></a>
+        <a href="#image-t14" class="image-card" data-hold="glance"><img src="images/t14.jpg"></a>
+        <a href="#image-t15" class="image-card" data-hold="held"><img src="images/a15.jpg"></a>
+        <a href="#image-t16" class="image-card" data-hold="glance"><img src="images/t16.jpg"></a>
+        <a href="#image-t17" class="image-card image-card--tall" data-hold="held"><img src="images/t17.jpg"></a>
+        <a href="#image-t18" class="image-card" data-hold="kept"><img src="images/t18.jpg"></a>
+        <a href="#image-t19" class="image-card" data-hold="revisited"><img src="images/t19.jpg"></a>
+        <a href="#image-t20" class="image-card" data-hold="glance"><img src="images/t20.jpg"></a>
+        <a href="#image-t21" class="image-card image-card--big" data-hold="revisited"><img src="images/t21.jpg"></a>
+        <a href="#image-t22" class="image-card" data-hold="glance"><img src="images/t22.jpg"></a>
+        <a href="#image-t23" class="image-card" data-hold="kept"><img src="images/t23.jpg"></a>
+        <a href="#image-t24" class="image-card" data-hold="held"><img src="images/t24.jpg" alt=""></a>        
+        <a href="#image-t25" class="image-card" data-hold="kept"><img src="images/t25.jpg"></a>
+        <a href="#image-t26" class="image-card" data-hold="kept"><img src="images/t26.jpg"></a>
+        <a href="#image-t27" class="image-card image-card--big" data-hold="glance"><img src="images/t27.jpg"></a>
+        <a href="#image-t28" class="image-card" data-hold="held"><img src="images/t28.jpg"></a> 
+        <a href="#image-t29" class="image-card" data-hold="glance"><img src="images/t29.jpg"></a>
+        <a href="#image-t30" class="image-card image-card--wide" data-hold="held"><img src="images/t30.jpg"></a>
+        <a href="#image-t31" class="image-card image-card--tall" data-hold="kept"><img src="images/t31.jpg"></a>
+        <a href="#image-t32" class="image-card image-card--big" data-hold="glance"><img src="images/t32.jpg"></a>
+        <a href="#image-t33" class="image-card" data-hold="glance"><img src="images/t33.jpg"></a>
+        <a href="#image-t34" class="image-card" data-hold="kept"><img src="images/t34.jpg"></a>
+        
+        <a href="index.html" class="image-card next-page">
+            <span style="font-size:24px; margin-bottom:5px; font-weight:300;">←</span>
+            <span style="font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">zoom out</span>
+        </a>
+        <a href="#image-t35" class="image-card image-card--big" data-hold="held"><img src="images/t35.jpg"></a>
+        <a href="#image-t36" class="image-card" data-hold="held"><img src="images/t36.jpg"></a>
+        <a href="#image-t37" class="image-card image-card--wide" data-hold="revisited"><img src="images/t37.jpg"></a>
+        <a href="#image-t38" class="image-card" data-hold="glance"><img src="images/t38.jpg"></a>
+        <a href="#image-t39" class="image-card image-card--wide" data-hold="held"><img src="images/t39.jpg"></a>
+
+    </div>
+  </main>
+
+  <aside class="about-project">
+    <div class="explanation">
+      <p>As I move closer, separation begins.</p>
+      <p>Foreground and background stop agreeing.</p>
+      <p>Some elements pull forward while others recede.</p>
+      <p>I start to notice where my attention lingers </p>
+    </div>
+
+    <div class="holding-key">
+      <div class="holding-list">
+        <div class="holding-word holding-title"><strong>Holding Patterns</strong></div>
+        <div class="holding-word"><div>Glance</div> <span> briefly seen</span></div>
+        <div class="holding-word"><div>Held</div> <span> felt before naming</span></div>
+        <div class="holding-word"><div>Kept</div> <span> returned to</span></div>
+        <div class="holding-word"><div>Revisited</div> <span> seen again, differently</span></div>
+      </div>
+
+      <div class="holding-description">
+        These describe how attention stayed, not what was photographed.
+      </div>
+    </div>
+  </aside>
+
+  <aside class="proximity-notes">
+    <p>Distance begins to register.</p>
+    <p>Not as space, but as separation.</p>
+    <p>Looking no longer feels neutral.</p>
+    <p>Attention shifts slightly—</p>
+    <p>not enough to commit,</p>
+    <p>but enough to notice that some things pull harder than others.</p>
+  </aside>
+
+  <footer class="footer-row">
+    <div class="footer-box footer-box--left">This layer operates at an in-between distance.</div>
+    <div class="footer-box"><div class="center-dots">...</div></div>
+    <div class="footer-box footer-box--right">The next layer collapses distance.</div>
+  </footer>
+
+  <div id="image-t1" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t01.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: cold glass radiating chill</li>
+                    <li>Sound: wind whistling through the steel lattice</li>
+                    <li>Contact: visual friction against the grid</li>
+                    <li>Light: pale sky flattening the depth of the structure</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t2" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t02.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t3" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t03.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: warm sunlight magnified by the glass</li>
+                    <li>Sound: rhythmic clatter of tracks, muffled conversation</li>
+                    <li>Contact: leaning against the cool window frame</li>
+                    <li>Light: saturated afternoon sun hitting the slope</li>
+                </ul>
+                <div class="note-text">the mountain feels close enough to touch, yet completely inaccessible</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t4" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t04.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t5" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t05.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: damp interior air</li>
+                    <li>Sound: rain tapping faintly on the skylight</li>
+                    <li>Contact: eyes tracing the unexpected shape against the light</li>
+                    <li>Light: overcast grey filtering through dirty glass</li>
+                </ul>
+                <div class="note-text">a fleeting shadow caught in a permanent frame</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t6" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t06.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span> the building felt imposing, a master of its landscape<br><br>
+                    <span class="note-tag">Now:</span> the reflection in the water softens the authority of the brick
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t7" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t07.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: raw cold air in an open plaza</li>
+                    <li>Sound: footsteps echoing on wet pavement</li>
+                    <li>Contact: dampness settling on clothes</li>
+                    <li>Light: diffused grey light erasing shadows</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t8" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t08.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: warm air trapped inside, contrasting the street</li>
+                    <li>Sound: mechanical hum of the press, muffled</li>
+                    <li>Contact: eyes resting on the density of objects</li>
+                    <li>Light: bright artificial task lighting cutting the gloom</li>
+                </ul>
+                <div class="note-text">the ordered chaos of making, framed by the anonymity of the street</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t9" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t09.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t10" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t10.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="image-t11" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t11.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: warm interior light cutting the cool night air</li>
+                    <li>Sound: laughter, steam rising, clattering plates</li>
+                    <li>Contact: sitting close on narrow benches</li>
+                    <li>Light: intimate, hanging bulbs creating pockets of visibility</li>
+                </ul>
+                <div class="note-text">a circle of light carving out a private room on a public street</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t12" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t12.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t13" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t13.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span> it felt cluttered, the machines an intrusion on the architecture<br><br>
+                    <span class="note-tag">Now:</span> the humming light of the machines feels like the only living presence in the stillness
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t14" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t14.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t15" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t15.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: cold stone radiating from the threshold</li>
+                    <li>Sound: silence, dampening the street noise</li>
+                    <li>Contact: eyes tracing the uneven gap at the bottom</li>
+                    <li>Light: soft, overcast daylight without shadow</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t16" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t16.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t17" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t17.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: conditioned interior air</li>
+                    <li>Sound: low engine vibration, muted city traffic outside</li>
+                    <li>Contact: glass barrier between viewer and street</li>
+                    <li>Light: streetlights smearing across the curved mirror</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t18" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t18.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: sunlight warming the dashboard</li>
+                    <li>Sound: sealed cabin silence, rhythm of tires on asphalt</li>
+                    <li>Contact: gripping the wheel, body pressed back</li>
+                    <li>Light: overexposed exterior washing out the details</li>
+                </ul>
+                <div class="note-text">the windshield acts as a screen, turning the city into a film</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t19" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t19.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span> purely utilitarian, ignored debris of commerce<br><br>
+                    <span class="note-tag">Now:</span> the stacked grid creates a colorful, accidental architecture of its own
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t20" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t20.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t21" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t21.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span> a functional crossing in bad weather, defined by wet shoes and cold air<br><br>
+                    <span class="note-tag">Now:</span> the reflection opens the ground, making the pavement as deep as the sky
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t22" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t22.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t23" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t23.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: cool stone radiating from the frame</li>
+                    <li>Sound: absolute silence</li>
+                    <li>Contact: visual texture of wood grain vs smooth stone</li>
+                    <li>Light: soft, indirect daylight</li>
+                </ul>
+                <div class="note-text">the small urn anchors the composition, offering life against the sealed entrance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t24" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t24.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: cold glass against the forehead</li>
+                    <li>Sound: low frequency hum of the engine</li>
+                    <li>Contact: vibration traveling through the frame</li>
+                    <li>Light: city layers merging in reflection, depth collapsing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t25" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t25.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: ambiguous warmth</li>
+                    <li>Sound: muted white noise</li>
+                    <li>Contact: inability to focus creating visual softness</li>
+                    <li>Light: diffused and scattered, losing source</li>
+                </ul>
+                <div class="note-text">focus fails, reducing the scene to pure color and atmosphere</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t26" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t26.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: crisp night air</li>
+                    <li>Sound: distant city rumble, faint buzz of neon</li>
+                    <li>Contact: eyes drawn to the floating geometry</li>
+                    <li>Light: artificial glow haloing against the dark</li>
+                </ul>
+                <div class="note-text">the hovering light creates a strange, suspended geometry above the roof</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t27" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t27.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t28" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t28.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: humid, heavy summer air</li>
+                    <li>Sound: rustling leaves, cicadas in the distance</li>
+                    <li>Contact: rough texture of the small tiles</li>
+                    <li>Light: filtered through dense canopy, dappled on the ground</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t29" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t29.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t30" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t30.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: hot air pushed by motion</li>
+                    <li>Sound: a rush of street noise passing too fast</li>
+                    <li>Contact: visual acceleration, loss of solid form</li>
+                    <li>Light: streaks of color dissolving into each other</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="image-t31" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t31.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: cool shadow trapped beneath the concrete</li>
+                    <li>Sound: traffic drone muffled by the mass above</li>
+                    <li>Contact: visual weight of the structure pressing down</li>
+                    <li>Light: bright sky cutting sharply through the gap</li>
+                </ul>
+                <div class="note-text">the heavy infrastructure is momentarily softened by the persistence of the leaves</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t32" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t32.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t33" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t33.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t34" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t34.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Kept</div>
+                <ul class="note-data">
+                    <li>Temperature: humid warmth rising from the water</li>
+                    <li>Sound: footsteps echoing on wooden planks</li>
+                    <li>Contact: shoulder brushing the worn timber posts</li>
+                    <li>Light: bright exterior light dissolving the figures</li>
+                </ul>
+                <div class="note-text">the transition from the shadowed interior to the open light feels like an exhale</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t35" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t35.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: hot air displaced by speed</li>
+                    <li>Sound: rush of wind, engine fading instantly</li>
+                    <li>Contact: vibration of the ground</li>
+                    <li>Light: green and grey smeared by motion</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t36" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t36.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: still, mild air</li>
+                    <li>Sound: silence of a closed shop</li>
+                    <li>Contact: texture of the bicycle basket and peeling paint</li>
+                    <li>Light: flat, even daylight without contrast</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t37" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t37.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Revisited</div>
+                <div class="note-text">
+                    <span class="note-tag">Then:</span> it appeared as a cluttered entrance, busy with decoration<br><br>
+                    <span class="note-tag">Now:</span> the warm light creates a hearth, turning the objects into a silent still life
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t38" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t38.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Glance</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-t39" class="image-overlay">
+        <div class="note-card">
+            <div class="note-image"><img src="images/t39.jpg"></div>
+            <div class="note-body">
+                <a href="#" class="note-close">Close</a>
+                <div class="note-label">Type: Held</div>
+                <ul class="note-data">
+                    <li>Temperature: cool stone facade</li>
+                    <li>Sound: absence of movement</li>
+                    <li>Contact: smooth plaster visually flattened</li>
+                    <li>Light: soft, overcast light washing out depth</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
